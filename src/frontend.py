@@ -4,7 +4,7 @@ from PIL import Image
 import io
 
 def transfer_style(image):
-    url = "http://127.0.0.1:8000/style-transfer/"  # Ajuste se necessário
+    url = "http://127.0.0.1:8000/style-transfer/"  
     
     if image is None:
         return "Erro: Nenhuma imagem enviada."
