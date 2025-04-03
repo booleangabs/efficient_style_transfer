@@ -3,12 +3,21 @@ import requests
 from PIL import Image
 import io
 
-def transfer_style(image):
-    url = "http://127.0.0.1:8000/style-transfer/"  # Ajuste se necessário
-    
+def transfer_style(image, style_option):
     if image is None:
         return "Erro: Nenhuma imagem enviada."
     
+    #aq determinar a URL baseada na opção selecionada no dropdown que vai se ligar com diferentes requisições do endpoint
+    if style_option == "Detectar Bordas":
+        url = "http://127.0.0.1:8000/style-transfer/"
+    elif style_option == "Estilo 2":
+        url = "http://127.0.0.1:8000/style-transfer/"
+    elif style_option == "Estilo 3":
+        url = "http://127.0.0.1:8000/style-transfer/"
+    else:
+        return "Erro" 
+
+    #processar a img e enviar a requisição a depender da requisição desejada pelo user
     image_bytes = io.BytesIO()
     image.save(image_bytes, format="PNG")
     image_bytes.seek(0)
@@ -20,16 +29,24 @@ def transfer_style(image):
     else:
         return f"Erro: {response.status_code} - {response.text}"
 
-#Interface
 with gr.Blocks() as demo:
     gr.Markdown("## Transferência de Estilo")
+    
     with gr.Row():
         input_img = gr.Image(type="pil", label="Imagem de Entrada")
-        style_img = gr.Image(type="pil", label="Imagem de Estilo (não conectada)")
+        style_dropdown = gr.Dropdown(
+            choices=["Detectar Bordas", "Estilo 2", "Estilo 3"],
+            value="Detectar Bordas",
+            label="Selecione o Estilo"
+        )
     
     output_img = gr.Image(label="Imagem Processada")
     transfer_btn = gr.Button("Transferir")
     
-    transfer_btn.click(transfer_style, inputs=[input_img], outputs=[output_img])
+    transfer_btn.click(
+        transfer_style,
+        inputs=[input_img, style_dropdown],
+        outputs=[output_img]
+    )
 
 demo.launch()
