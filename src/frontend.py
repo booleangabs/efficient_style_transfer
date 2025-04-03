@@ -3,6 +3,7 @@ import requests
 from PIL import Image
 import io
 
+
 def transfer_style(image, style_option):
     if image is None:
         return "Erro: Nenhuma imagem enviada."
