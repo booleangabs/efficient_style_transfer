@@ -9,12 +9,15 @@ import os
 from pathlib import Path
 from config import models_dir  # Assuming this is defined in config.py
 
-app = FastAPI(title="Style Transfer API")
 
-# Load ONNX model
-onnx_model_path = "style_transfer_mosaic.onnx"
-ort_session = ort.InferenceSession(os.path.join(models_dir, onnx_model_path))
-input_name = ort_session.get_inputs()[0].name
+STYLE_TO_MODEL = {
+    "Mosaic": "style_transfer_mosaic.onnx",
+    "The Scream": "style_transfer_scream.onnx",
+    "Old Canal Port": "style_transfer_old_canal_port.onnx"
+}
+
+
+app = FastAPI(title="Style Transfer API")
 
 def preprocess_image(image: np.ndarray) -> np.ndarray:
     """
@@ -80,7 +83,7 @@ async def style_transfer(
         if not file.content_type or not file.content_type.startswith("image/"):
             raise HTTPException(status_code=400, detail="File must be an image")
         print(f"Style: {style_option}")
-        print(f"Color: {keep_colors}, {type(keep_colors)}")
+        print(f"Keep colors: {keep_colors}, {type(keep_colors)}")
         original_filename = Path(file.filename).stem
         new_filename = f"{original_filename}_processed.png"
 
@@ -90,6 +93,11 @@ async def style_transfer(
 
         # Preprocess for model
         input_array = preprocess_image(image_np)
+
+        # Load ONNX model
+        onnx_model_path = STYLE_TO_MODEL[style_option]
+        ort_session = ort.InferenceSession(os.path.join(models_dir, onnx_model_path))
+        input_name = ort_session.get_inputs()[0].name
 
         # Run inference
         ort_inputs = {input_name: input_array}
@@ -102,7 +110,7 @@ async def style_transfer(
         if keep_colors:
             final_image = transfer_color(image_np, processed_image)
         else:
-            final_image = processed_image
+            final_image = processed_image[..., ::-1]
 
         # Convert to PNG bytes
         _, buffer = cv2.imencode(".png", final_image)
