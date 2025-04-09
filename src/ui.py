@@ -10,7 +10,8 @@ import cv2
 STYLE_IMAGES = {
     "Mosaic": os.path.join(os.path.dirname(__file__), os.pardir, "assets", "style_images", "mosaic.jpg"),
     "The Scream": os.path.join(os.path.dirname(__file__), os.pardir, "assets", "style_images", "Edvard Munch - The Scream.jpg"),
-    "Old Canal Port": os.path.join(os.path.dirname(__file__), os.pardir, "assets", "style_images", "Oscar Florianus Bluemner - Old Canal Port.jpg")
+    "Old Canal Port": os.path.join(os.path.dirname(__file__), os.pardir, "assets", "style_images", "Oscar Florianus Bluemner - Old Canal Port.jpg"),
+    "Starry Night": os.path.join(os.path.dirname(__file__), os.pardir, "assets", "style_images", "Vincent Van Gogh - Starry Night.jpg")
 }
 
 def request_style_transfer(image, style_option, keep_colors):

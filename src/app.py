@@ -13,7 +13,8 @@ from config import models_dir  # Assuming this is defined in config.py
 STYLE_TO_MODEL = {
     "Mosaic": "style_transfer_mosaic.onnx",
     "The Scream": "style_transfer_scream.onnx",
-    "Old Canal Port": "style_transfer_old_canal_port.onnx"
+    "Old Canal Port": "style_transfer_old_canal_port.onnx",
+    "Starry Night": "style_transfer_starry_night.onnx"
 }
 
 
